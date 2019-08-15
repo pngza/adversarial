@@ -71,7 +71,9 @@ def _iterative_gradient(model: Module,
     Returns:
         x_adv: Adversarially perturbed version of x
     """
-    x_adv = x.clone().detach().requires_grad_(True).to(x.device)
+    x_adv = x.clone().detach().requires_grad_(True).to(x.device)  # PN: starting with x
+
+    # PN: y_target is not set on both pgd and iterated_fgsm in jupyter notebook
     targeted = y_target is not None
 
     if random:
@@ -102,6 +104,7 @@ def _iterative_gradient(model: Module,
                 x_adv += gradients
 
 
+        # PN: projects x_adv into the l_norm ball around x. See utils.py
         # Project back into l_norm ball and correct range
         x_adv = project(x, x_adv, norm, eps).clamp(*clamp)
 
