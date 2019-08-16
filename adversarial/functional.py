@@ -97,10 +97,15 @@ def _iterative_gradient(model: Module,
             if targeted:
                 # Targeted: Gradient descent with on the loss of the (incorrect) target label
                 # w.r.t. the model parameters
+
+                # PN: If there is a targeted_y, then we take gradient descent toward the targeted_y (likely opposite)
                 x_adv -= gradients
             else:
                 # Untargeted: Gradient ascent on the loss of the correct label w.r.t.
                 # the model parameters
+
+                # PN: this is the condition that jupyter notebook example takes in its first
+                # example. It is doing gradient ascent
                 x_adv += gradients
 
 
@@ -155,6 +160,7 @@ def pgd(model: Module,
         step: float,
         eps: float,
         norm: Union[str, float],
+        *,
         y_target: torch.Tensor = None,
         random: bool = False,
         clamp: Tuple[float, float] = (0, 1)) -> torch.Tensor:
